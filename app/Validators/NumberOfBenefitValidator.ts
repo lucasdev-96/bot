@@ -42,7 +42,7 @@ export default class NumberOfBenefitValidator {
    */
   public messages: CustomMessages = {
     required: '{{ field }} is required',
-    'cpf.regex': "Invalid Format"
+    'cpf.regex': "Invalid CPF Format example: 000.000.000-13"
 
   }
 }
