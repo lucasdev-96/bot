@@ -18,8 +18,7 @@
   ],
   "providers": [
     "./providers/AppProvider",
-    "@adonisjs/core",
-    "./providers/CrawlerProvider"
+    "@adonisjs/core"
   ],
   "aceProviders": [
     "@adonisjs/repl"
