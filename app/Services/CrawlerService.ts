@@ -6,9 +6,7 @@ export default class CrawlerService {
     const browser = await puppeteer.launch({ headless: false})
     const page = await browser.newPage()
     await page.setViewport({width: 1200, height: 800})
-    await page.goto(url, {
-      waitUntil: ['networkidle0', 'load'],
-    })
+    await page.goto(url)
     return page
   }
 
