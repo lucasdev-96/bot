@@ -1,11 +1,12 @@
-import puppeteer from "puppeteer"
+import puppeteer, { Page } from "core"
 
 export default class CrawlerService {
 
-  public async run(url: string) {
-    const browser = await puppeteer.launch()
+  public async start(url: string): Promise<Page> {
+    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox']})
     const page = await browser.newPage()
+    await page.setViewport({width: 1080, height: 1024});
     await page.goto(url)
-    await page.close()
+    return page
   }
 }
