@@ -1,4 +1,4 @@
-import puppeteer, { Page } from "core"
+import puppeteer, { Page } from "puppeteer"
 
 export default class CrawlerService {
 
