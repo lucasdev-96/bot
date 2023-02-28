@@ -5,9 +5,10 @@ export default class CrawlerService {
   public async start(url: string): Promise<Page> {
     const browser = await puppeteer.launch({ headless: false})
     const page = await browser.newPage()
-    await page.setViewport({width: 1080, height: 1024})
-    await page.setDefaultNavigationTimeout(90000)
-    await page.goto(url)
+    await page.setViewport({width: 1200, height: 800})
+    await page.goto(url, {
+      waitUntil: ['networkidle0', 'load'],
+    })
     return page
   }
 
@@ -19,9 +20,8 @@ export default class CrawlerService {
     await page.click(element)
   }
 
-  // public async getElement(page: Page, element: string,): Promise<ElementHandle<HTMLSelectElement> | null> {
-  //   return page.$();
-  // }
-
+  public async getShadowRootElement(page: Page, querySelector: string, shadowRootElement: string): Promise<ElementHandle<Node> | null> {
+    return  (await (page.evaluateHandle(`document.querySelector("${querySelector}").shadowRoot.querySelector("${shadowRootElement}")`))).asElement()
+  }
 }
 
