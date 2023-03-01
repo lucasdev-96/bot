@@ -4,7 +4,7 @@ export default class CrawlerService {
 
   public async start(url: string): Promise<Page> {
     const browser = await puppeteer.launch({ headless: false})
-    const page = await browser.newPage()
+    const [page] = await browser.pages()
     await page.setViewport({width: 1200, height: 800})
     await page.goto(url)
     return page
