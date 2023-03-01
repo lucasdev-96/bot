@@ -7,7 +7,7 @@ import CrawlerService from "./CrawlerService";
 
 @inject()
 export default class CrawlerNumberOfBenefitsService {
-  private TIME_OUT = 9000
+  private TIME_OUT = 90000
   constructor(private crawler: CrawlerService)  {}
   async getNumberOfBenefits({cpf, login, password}: INumberOfBenefitsValidatorInterface) {
         const page = await this.link()
@@ -15,6 +15,7 @@ export default class CrawlerNumberOfBenefitsService {
         await this.notifys(page)
         await this.menuOptions(page)
         await this.extract(page)
+        await this.cpf(page, cpf)
         // await page.close()
   }
 
@@ -47,8 +48,13 @@ export default class CrawlerNumberOfBenefitsService {
   private async extract(page: Page) {
     await page.waitForSelector('#main > ion-content > app-extrato > ion-content > form',  {timeout: this.TIME_OUT})
     await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card',  {timeout: this.TIME_OUT})
+    await page.evaluateHandle(() => document.querySelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(11)')?.shadowRoot?.querySelector('button')?.click())
+  }
+
+  private async cpf(page: Page, cpf: string) {
+    await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input')
     await page.waitForTimeout(1000)
-    const button = await this.crawler.getShadowRootElement(page, '#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(10)', 'button > span')
-    await (button as ElementHandle<Element>).click()
+    await this.crawler.setInput(page, '#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input', cpf)
+    await page.evaluateHandle(() => document.querySelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-button')?.shadowRoot?.querySelector('button')?.click())
   }
 }
