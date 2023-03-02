@@ -22,8 +22,11 @@
 npm install
 ```
 <hr>
+  
+#### 3- Você deve copiar os dados do .env.example e criar um .env e colar os dados nele
+<hr>
 
-#### 3-  Para rodar o projeto execute o comando abaixo:
+#### 4-  Para rodar o projeto execute o comando abaixo:
 ```bash  
 npm run dev
 ```
