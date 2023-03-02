@@ -29,7 +29,7 @@ npm run dev
 ```
 #### Para rodar os testes execute o comando abaixo:
 ```bash 
-node ace teste
+node ace test
 ```
 
 <hr>
