@@ -12,6 +12,8 @@
 
 
 # Intruções para rodar o projeto
+  
+### Tenha o Chrome na sua Máquina.
 
 #### 1- Você deve ter um API CLIENT em sua máquina EX(INSOMNIA, POSTMAN)
 
@@ -30,7 +32,7 @@ npm install
 ```bash  
 npm run dev
 ```
-#### Para rodar os testes tenha certeza de que o servidor esteja aberto e  execute o comando abaixo:
+#### Para rodar os testes  execute o comando abaixo:
 ```bash 
 node ace test
 ```
