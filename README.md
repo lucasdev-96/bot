@@ -4,6 +4,7 @@
 <hr>
 <h2>Tecnologias Utlizadas<h2>
 <ul>
+<li> TypeScript 
 <li> AdonisJS (API)
 <li> Puppeteer (Crawler)
 <li> Japa (testes)
