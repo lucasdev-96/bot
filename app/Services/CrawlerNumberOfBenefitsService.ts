@@ -1,5 +1,5 @@
 import { inject } from "@adonisjs/core/build/standalone";
-import { Urls } from "App/enums/Crawler.enum";
+import { Error, Urls } from "App/enums/Crawler.enum";
 import INumberOfBenefitsValidatorInterface from "App/interfaces/numberOfBenefitsValidatorInterface";
 import { ElementHandle, Page } from "puppeteer";
 
@@ -9,52 +9,65 @@ import CrawlerService from "./CrawlerService";
 export default class CrawlerNumberOfBenefitsService {
   private TIME_OUT = 90000
   constructor(private crawler: CrawlerService)  {}
-  async getNumberOfBenefits({cpf, login, password}: INumberOfBenefitsValidatorInterface) {
-        const page = await this.link()
-        await this.login(page, login, password)
-        await this.notifys(page)
-        await this.menuOptions(page)
-        await this.extract(page)
-        await this.cpf(page, cpf)
-        // await page.close()
+  async getNumberOfBenefits({cpf, login, password}: INumberOfBenefitsValidatorInterface): Promise<Array<string | null> | string> {
+        const page = await this.setLink()
+        await this.setLogin(page, login, password)
+        await this.setNotifys(page)
+        await this.setMenuOptions(page)
+        await this.setExtract(page)
+        await this.setCpf(page, cpf)
+        const numberOfBenefit = await this.getBenefitsNumber(page)
+        await page.close()
+        return await this.formateData(numberOfBenefit)
   }
 
-  private async link(): Promise<Page> {
+  private async setLink(): Promise<Page> {
     const firstLink = await this.crawler.start(Urls.EXTRATO_CLUB)
     const secondLink = await firstLink.evaluate(() =>  document.querySelector('html > frameset > frame')?.getAttribute('src'))
     firstLink.close()
     return await this.crawler.start(secondLink ? secondLink : Urls.EXTRATO_CLUB)
   }
 
-  private async login(page: Page, login: string, password: string) {
+  private async setLogin(page: Page, login: string, password: string) {
     await this.crawler.setInput(page, '#user', login)
     await this.crawler.setInput(page, '#pass', password)
     await this.crawler.buttonClick(page, '#botao')
   }
 
-  private async notifys(page: Page) {
+  private async setNotifys(page: Page) {
     await page.waitForSelector('#ion-overlay-1 > div.modal-wrapper.ion-overlay-wrapper.sc-ion-modal-md > app-modal-fila > ion-button', {timeout: this.TIME_OUT})
-    await page.waitForTimeout(1000)
+    await page.waitForTimeout(2000)
     const button = await this.crawler.getShadowRootElement(page, '#ion-overlay-1 > div.modal-wrapper.ion-overlay-wrapper.sc-ion-modal-md > app-modal-fila > ion-button', 'button')
     await (button as ElementHandle<Element>).click()
   }
 
-  private async menuOptions(page: Page) {
+  private async setMenuOptions(page: Page) {
     await page.waitForSelector('body > app-root > app-home > ion-app > ion-menu > ion-content',  {timeout: this.TIME_OUT})
     const button = await this.crawler.getShadowRootElement(page, 'body > app-root > app-home > ion-app > ion-menu > ion-content > ion-list > ion-item:nth-child(2)', 'div.item-native')
     await (button as ElementHandle<Element>).click()
   }
 
-  private async extract(page: Page) {
+  private async setExtract(page: Page) {
     await page.waitForSelector('#main > ion-content > app-extrato > ion-content > form',  {timeout: this.TIME_OUT})
     await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card',  {timeout: this.TIME_OUT})
+    await page.waitForTimeout(1000)
     await page.evaluateHandle(() => document.querySelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(11)')?.shadowRoot?.querySelector('button')?.click())
   }
 
-  private async cpf(page: Page, cpf: string) {
+  private async setCpf(page: Page, cpf: string) {
     await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input')
-    await page.waitForTimeout(1000)
     await this.crawler.setInput(page, '#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input', cpf)
+    await page.waitForTimeout(2000)
     await page.evaluateHandle(() => document.querySelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-button')?.shadowRoot?.querySelector('button')?.click())
+  }
+
+  private async getBenefitsNumber(page: Page): Promise<Array<string | null>>{
+    await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-card-header > ion-card-title')
+    return await page
+    .$$eval('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item', (e) => e.map((element) =>  element.textContent))
+  }
+
+  private async formateData(data: Array<string | null>): Promise<Array<string | null> | string>{
+    return data[0] === Error.NOT_FOUND_REGISTRATION ? Error.NOT_FOUND_REGISTRATION : data
   }
 }
