@@ -11,7 +11,7 @@ export default class NumberOfBenefitsController {
     const payload: INumberOfBenefitsValidatorInterface = await request.validate(NumberOfBenefitValidator)
     const isErrorLogin = this.verifylogin.errorLogin(payload.login, payload.password)
     if (isErrorLogin) {
-      response.status(200).json({response: isErrorLogin})
+      response.status(404).json({response: isErrorLogin})
       return;
     }
     const numberOfBenefits = await this.crawlerNumberOfBenefits.getNumberOfBenefits(payload)
