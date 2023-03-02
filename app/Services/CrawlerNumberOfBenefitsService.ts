@@ -50,19 +50,20 @@ export default class CrawlerNumberOfBenefitsService {
   private async setExtract(page: Page) {
     await page.waitForSelector('#main > ion-content > app-extrato > ion-content > form',  {timeout: this.TIME_OUT})
     await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card',  {timeout: this.TIME_OUT})
+    await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(1)',  {timeout: this.TIME_OUT})
     await page.waitForTimeout(1000)
     await page.evaluateHandle(() => document.querySelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(11)')?.shadowRoot?.querySelector('button')?.click())
   }
 
   private async setCpf(page: Page, cpf: string) {
-    await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input')
+    await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input', {timeout: this.TIME_OUT})
     await this.crawler.setInput(page, '#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input', cpf)
     await page.waitForTimeout(2000)
     await page.evaluateHandle(() => document.querySelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-button')?.shadowRoot?.querySelector('button')?.click())
   }
 
   private async getBenefitsNumber(page: Page): Promise<Array<string | null>>{
-    await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-card-header > ion-card-title')
+    await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-card-header > ion-card-title', {timeout: this.TIME_OUT})
     return await page
     .$$eval('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item', (e) => e.map((element) =>  element.textContent))
   }
