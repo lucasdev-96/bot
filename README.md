@@ -13,9 +13,7 @@
 
 # Intruções para rodar o projeto
   
-### Tenha o Chrome na sua Máquina.
-
-#### 1- Você deve ter um API CLIENT em sua máquina EX(INSOMNIA, POSTMAN)
+#### 1- Você deve ter um API CLIENT em sua máquina EX(INSOMNIA, POSTMAN) e o Chrome
 
 <hr>
 
