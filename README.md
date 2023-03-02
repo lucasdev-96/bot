@@ -12,8 +12,8 @@
 
 
 # Intruções para rodar o projeto
-
-#### 1- Você deve ter um API CLIENT em sua máquina EX(INSOMNIA, POSTMAN)
+  
+#### 1- Você deve ter um API CLIENT em sua máquina EX(INSOMNIA, POSTMAN) e o Chrome
 
 <hr>
 
@@ -22,14 +22,17 @@
 npm install
 ```
 <hr>
+  
+#### 3- Você deve copiar os dados do .env.example e criar um .env e colar os dados nele
+<hr>
 
-#### 3-  Para rodar o projeto execute o comando abaixo:
+#### 4-  Para rodar o projeto execute o comando abaixo:
 ```bash  
 npm run dev
 ```
-#### Para rodar os testes execute o comando abaixo:
+#### Para rodar os testes  execute o comando abaixo:
 ```bash 
-node ace teste
+node ace test
 ```
 
 <hr>
