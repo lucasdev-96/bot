@@ -30,7 +30,7 @@ npm install
 ```bash  
 npm run dev
 ```
-#### Para rodar os testes execute o comando abaixo:
+#### Para rodar os testes tenha certeza de que o servidor esteja aberto e  execute o comando abaixo:
 ```bash 
 node ace test
 ```
