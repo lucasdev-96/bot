@@ -52,7 +52,13 @@ export default class CrawlerNumberOfBenefitsService {
     await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card',  {timeout: this.TIME_OUT})
     await page.waitForSelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(1)',  {timeout: this.TIME_OUT})
     await page.waitForTimeout(1000)
-    await page.evaluateHandle(() => document.querySelector('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(11)')?.shadowRoot?.querySelector('button')?.click())
+    await page
+    .$$eval('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button', (e) => e.map((element) =>  {
+      if (element.textContent === 'Encontrar Benefícios de um CPF') {
+      element.shadowRoot.querySelector('button').click()
+      }
+    }))
+
   }
 
   private async setCpf(page: Page, cpf: string) {
